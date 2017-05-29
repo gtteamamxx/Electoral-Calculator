@@ -1,0 +1,54 @@
+﻿<Controls:MetroWindow x:Class="ElectoralCalculator.Views.StartWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      xmlns:local="clr-namespace:ElectoralCalculator.Views"
+                      xmlns:viewmodels="clr-namespace:ElectoralCalculator.ViewModels"
+                      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                      xmlns:behaviors="clr-namespace:ElectoralCalculator.Behaviors"
+                      mc:Ignorable="d"
+                      BorderBrush="{DynamicResource AccentColorBrush}"
+                      WindowStyle="None"
+                      BorderThickness="1"
+                      WindowStartupLocation="CenterScreen"
+                      Title="Electoral Calculator" 
+                      ResizeMode="CanMinimize"
+                      Height="700" 
+                      Width="1000"
+                      Name="Window">
+
+    <Controls:MetroWindow.DataContext>
+        <viewmodels:StartWindowViewModel />
+    </Controls:MetroWindow.DataContext>
+
+    <i:Interaction.Behaviors>
+        <behaviors:DisableBackSpaceKeyBehavior />
+    </i:Interaction.Behaviors>
+    
+    <Grid>
+        <Grid.Resources>
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
+        </Grid.Resources>
+
+        <TabControl Margin="20">
+            <TabItem Header="Vote app">
+                <Frame Width="900"
+                       Height="550"
+                       NavigationUIVisibility="Hidden">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Loaded">
+                            <i:InvokeCommandAction Command="{Binding FrameLoadedCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    
+                    <i:Interaction.Behaviors>
+                        <behaviors:ChangeFrameSourceBehavior />
+                    </i:Interaction.Behaviors>
+                </Frame>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Controls:MetroWindow>

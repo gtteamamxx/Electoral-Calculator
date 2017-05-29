@@ -1,0 +1,168 @@
+﻿<UserControl x:Class="ElectoralCalculator.Views.VoteForCandidatsUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:dto="clr-namespace:ElectoralCalculator.Models.DTO"
+             xmlns:viewmodels="clr-namespace:ElectoralCalculator.ViewModels"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d"
+             Name="UserControl"
+             d:DesignHeight="530" 
+             d:DesignWidth="790">
+
+    <UserControl.DataContext>
+        <viewmodels:VoteForCandidatesViewModel />
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <Style TargetType="ListView" BasedOn="{StaticResource {x:Type ListView}}">
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
+        </Style>
+
+        <Style TargetType="ListViewItem">
+            <Setter Property="Focusable" Value="False"/>
+        </Style>
+
+        <DataTemplate x:Key="CandidatesList" 
+                      DataType="dto:CandidateDto">
+            <Border BorderBrush="{Binding IsChecked, Converter={StaticResource IsCheckedToBorderBrushConverter}}"
+                    BorderThickness="0.5"
+                    Padding="1"
+                    Margin="-5 0 0 0">
+                
+                <StackPanel Orientation="Horizontal"
+                            Margin="5 0 0 0">
+                    <CheckBox IsChecked="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                              IsEnabled="{Binding ElementName=UserControl, Path=DataContext.IsVoteButtonEnabled}"/>
+                    <TextBlock Text="{Binding}"
+                               FontSize="15"
+                               Margin="10 0 10 5"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <Storyboard x:Key="FadeInText">
+            <DoubleAnimation From="0.0" To="1" Duration="0:0:0.25" Storyboard.TargetName="HeaderText" Storyboard.TargetProperty="Opacity" />
+        </Storyboard>
+
+        <!-- This breaks DRY rule. I tried to add doubleanimation as resource with key, but how to use doubleAnimation in
+        this storyborad for concrete target?-->
+        <Storyboard x:Key="FirstGroupBoxAnimation">
+            <DoubleAnimation From="0.0" To="300" Duration="0:0:0.25" Storyboard.TargetName="FirstGroupBox" Storyboard.TargetProperty="Width" />
+        </Storyboard>
+        <Storyboard x:Key="SecondGroupBoxAnimation">
+            <DoubleAnimation From="0.0" To="300" Duration="0:0:0.25" Storyboard.TargetName="SecondGroupBox" Storyboard.TargetProperty="Width" />
+        </Storyboard>
+        <Storyboard x:Key="ThirdGroupBoxAnimation">
+            <DoubleAnimation From="0.0" To="300" Duration="0:0:0.25" Storyboard.TargetName="ThirdGroupBox" Storyboard.TargetProperty="Width" />
+        </Storyboard>
+        <Storyboard x:Key="FourthGroupBoxAnimation">
+            <DoubleAnimation From="0.0" To="300" Duration="0:0:0.25" Storyboard.TargetName="FourthGroupBox" Storyboard.TargetProperty="Width" />
+        </Storyboard>
+    </UserControl.Resources>
+
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard Storyboard="{StaticResource FadeInText}" />
+            <BeginStoryboard Storyboard="{StaticResource FirstGroupBoxAnimation}" />
+            <BeginStoryboard Storyboard="{StaticResource SecondGroupBoxAnimation}" />
+            <BeginStoryboard Storyboard="{StaticResource ThirdGroupBoxAnimation}" />
+            <BeginStoryboard Storyboard="{StaticResource FourthGroupBoxAnimation}" />
+        </EventTrigger>
+    </UserControl.Triggers>
+
+    <Grid Background="White">
+        <Grid.Resources>
+            <Style TargetType="GroupBox" BasedOn="{StaticResource {x:Type GroupBox}}">
+                <Setter Property="Width" Value="300" />
+            </Style>
+        </Grid.Resources>
+
+        <TextBlock Text="{Binding Header}"
+                   Foreground="Black"
+                   VerticalAlignment="Top"
+                   FontSize="30"
+                   Name="HeaderText"
+                   FontWeight="ExtraLight"
+                   TextAlignment="Center">
+
+            <TextBlock.Effect>
+                <DropShadowEffect Opacity="0.2" />
+            </TextBlock.Effect>
+
+        </TextBlock>
+
+        <Grid HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              Margin="0 -50 0 0">
+
+            <Grid.Resources>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Brown.xaml" />
+            </Grid.Resources>
+
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Header="Piastowie"
+                      Name="FirstGroupBox">
+                <ListView ItemsSource="{Binding CandidatesGroupList[0], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                          ItemTemplate="{StaticResource CandidatesList}" />
+            </GroupBox>
+            <GroupBox Header="Dynastia Jagiellonów"
+                      Grid.Column="1"
+                      Name="SecondGroupBox">
+                <ListView ItemsSource="{Binding CandidatesGroupList[1], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                          ItemTemplate="{StaticResource CandidatesList}" SelectedItem="" />
+            </GroupBox>
+            <GroupBox Header="Elekcyjni dla Polski"
+                      Grid.Row="1"
+                      Name="ThirdGroupBox">
+                <ListView ItemsSource="{Binding CandidatesGroupList[2], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                          ItemTemplate="{StaticResource CandidatesList}" />
+            </GroupBox>
+            <GroupBox Header="Wazowie"
+                      Grid.Column="1"
+                      Grid.Row="1"
+                      Name="FourthGroupBox">
+                <ListView ItemsSource="{Binding CandidatesGroupList[3], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                          ItemTemplate="{StaticResource CandidatesList}" />
+            </GroupBox>
+
+        </Grid>
+
+        <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Center"
+                    Margin="50">
+
+            <Button Content="Vote"
+                    Width="100"
+                    Height="40"
+                    Margin="30 0 0 0"
+                    IsEnabled="{Binding IsVoteButtonEnabled}">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding VoteCommand}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+
+            <controls:ProgressRing Width="30"
+                                   Height="30"
+                                   Margin="10 0 0 0"
+                                   IsActive="{Binding IsProgressRingActive}" />
+        </StackPanel>
+
+
+    </Grid>
+</UserControl>

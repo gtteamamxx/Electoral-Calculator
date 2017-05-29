@@ -1,0 +1,41 @@
+﻿<Page x:Class="ElectoralCalculator.Views.VotePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ElectoralCalculator.Views"
+      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:viewmodels="clr-namespace:ElectoralCalculator.ViewModels"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:behaviors="clr-namespace:ElectoralCalculator.Behaviors"
+      mc:Ignorable="d" 
+      d:DesignHeight="550" d:DesignWidth="900"
+      Title="VotePage">
+
+    <Page.DataContext>
+        <viewmodels:VoteViewModel />
+    </Page.DataContext>
+    
+    <Grid>
+        <GroupBox Header="{Binding Header}"
+                  controls:GroupBoxHelper.HeaderForeground="Black">
+            <TabControl SelectedItem="{Binding SelectedTab, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+
+                <i:Interaction.Behaviors>
+                    <behaviors:ShowStatsWhenVotedBehavior />
+                </i:Interaction.Behaviors>
+                
+                <TabItem Header="Vote for candidates">
+                    <local:VoteForCandidatsUserControl />
+                </TabItem>
+                
+                <TabItem Header="Stats"
+                         Name="StatsTab"> <!-- Name for navigation behavior, don't touch -->
+                    <local:StatsUserControl />
+                </TabItem>
+                
+                <TabItem Header="Logout" />
+            </TabControl>
+        </GroupBox>
+    </Grid>
+</Page>

@@ -1,0 +1,119 @@
+﻿<Page x:Class="ElectoralCalculator.Views.VoterLoginPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ElectoralCalculator.Views"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:viewmodels="clr-namespace:ElectoralCalculator.ViewModels"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behavior="clr-namespace:ElectoralCalculator.Behavior"
+             xmlns:behaviors="clr-namespace:ElectoralCalculator.Behaviors"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" 
+             d:DesignWidth="700">
+
+    <Page.DataContext>
+        <viewmodels:VoterLoginViewModel />
+    </Page.DataContext>
+
+    <Page.Resources>
+        <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+            <Setter Property="FontSize" Value="18" />
+        </Style>
+
+        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Width" Value="300" />
+            <Setter Property="Height" Value="35" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="10 0 0 0" />
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Controls:TextBoxHelper.IsWaitingForData" Value="True" />
+        </Style>
+    </Page.Resources>
+
+    <i:Interaction.Behaviors>
+        <behaviors:PushLoginButtonByEnterOnVoteLoginPageBehavior />
+    </i:Interaction.Behaviors>
+    
+    <Grid>
+        <GroupBox Header="Login">
+            <Grid Background="White">
+
+                <TextBlock Text="Log in to vote or check stats"
+                           FontSize="17"
+                           Padding="2"
+                           VerticalAlignment="Top"
+                           Margin="0 50"
+                           Foreground="DarkGreen"
+                           TextAlignment="Center">
+                    
+                    <TextBlock.Background>
+                        <SolidColorBrush Color="Blue" Opacity="0.1" />
+                    </TextBlock.Background>
+                    
+                </TextBlock>
+
+                <Grid HorizontalAlignment="Center"
+                      VerticalAlignment="Center">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Name:" />
+                    <TextBox Controls:TextBoxHelper.Watermark="Please enter your name"
+                             Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                        <i:Interaction.Behaviors>
+                            <behavior:SetFocusOnLoadedBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <Label Grid.Row="1" 
+                           Content="Surname:"
+                           Margin="0 20"/>
+                    <TextBox Grid.Row="1" 
+                             Controls:TextBoxHelper.Watermark="Please enter your surname"
+                             Text="{Binding Surname, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+
+                    <Label Grid.Row="2"
+                           Content="PESEL:" />
+                    <TextBox Grid.Row="2" 
+                             Controls:TextBoxHelper.Watermark="Please enter a valid PESEL"
+                             Text="{Binding Pesel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+
+                </Grid>
+
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Center"
+                            Margin="20">
+
+                    <Button Content="Login"
+                            Height="40"
+                            Width="100"
+                            Margin="30 0">
+                        
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <i:InvokeCommandAction Command="{Binding LoginCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+
+                    </Button>
+
+                    <Controls:ProgressRing Width="30"
+                                           Height="30"
+                                           IsActive="{Binding IsLoggingProgressRingActive}"/>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Page>
